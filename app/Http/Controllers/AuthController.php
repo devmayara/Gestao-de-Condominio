@@ -81,7 +81,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if(!$validator->fails()) {
             $cpf = $request->input('cpf');
             $password = $request->input('password');
 
@@ -110,6 +110,29 @@ class AuthController extends Controller
             return $array;
         }
 
+        return $array;
+    }
+
+    public function validateToken()
+    {
+        $array = ['error' => ''];
+
+        $user = Auth()->user();
+        $array['user'] = $user;
+
+        $properties = Unit::select(['id','name'])
+        ->where('id_owner', $user['id'])
+        ->get();
+
+        $array['user']['properties'] = $properties;
+
+        return $array;
+    }
+
+    public function logout()
+    {
+        $array = ['error' => ''];
+        auth()->logout();
         return $array;
     }
 }
