@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Lot. 43, Qd. E
-            $table->integer('id_owner');
+            $table->integer('id_owner')->default(0);
         });
 
 
