@@ -76,7 +76,36 @@ class WarningController extends Controller
     {
         $array = ['error' => ''];
 
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'property' => 'required'
+        ]);
+        if(!$validator->fails()) {
+            $title = $request->input('title');
+            $property = $request->input('property');
+            $list = $request->input('list');
 
+            $newWarn = new Warning();
+            $newWarn->id_unit = $property;
+            $newWarn->title = $title;
+            $newWarn->status = 'IN_REVIW';
+            $newWarn->datecreated = date('Y-m-d');
+
+            if($list && is_array($list)) {
+                $photos = [];
+                foreach($list as $listItem) {
+                    $url = explode('/', $listItem);
+                    $photos[] = end($url);
+                }
+                $newWarn->photos = implode(',', $photos);
+            } else {
+                $newWarn->photos = '';
+            }
+            $newWarn->save();
+        } else {
+            $array['error'] = $validator->errors()->first();
+            return $array;
+        }
 
         return $array;
     }
