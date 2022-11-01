@@ -29,7 +29,7 @@ class WarningController extends Controller
                 ->get();
 
                 foreach($warnings as $warnKey => $warnValue) {
-                    $warnings[$warnKey]['datecreated'] = date('d/m/Y', strtotime($warnValue['datecreated']));
+                    $warnings[$warnKey]['datecreated'] = date('d-m-Y', strtotime($warnValue['datecreated']));
                     $photoList = [];
                     $photos = explode(',', $warnValue['photos']);
                     foreach($photos as $photo) {

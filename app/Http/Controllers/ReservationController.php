@@ -6,5 +6,12 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    //
+    public function getInfo()
+    {
+        $array = ['error' => ''];
+
+
+
+        return $array;
+    }
 }
