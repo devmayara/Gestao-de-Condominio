@@ -2,11 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    public function getInfo()
+    public function getReservations()
+    {
+        $array = ['error' => '', 'list' => []];
+        $daysHelper = ['Dom', 'Seg', 'Ter', 'Qau', 'Qui', 'Sex', 'Sáb'];
+
+        $areas = Area::where('allowed', 1)->get();
+
+        foreach($areas as $area) {
+            $dayList = explode(',', $area['days']);
+
+            $dayGroups = [];
+
+            $lastDay = intval(current($dayList));
+            $dayGroups[] = $daysHelper[$lastDay];
+            array_shift($dayList);
+
+            foreach($dayList as $day) {
+                if(intval($day) != $lastDay+1) {
+                    $dayGroups[] = $daysHelper[$lastDay];
+                    $dayGroups[] = $daysHelper[$day];
+                }
+                $lastDay = intval($day);
+            }
+
+            $dayGroups[] = $daysHelper[end($dayList)];
+
+            $dates = '';
+            $close = 0;
+            foreach($dayGroups as $group) {
+                if($close === 0) {
+                    $dates .= $group;
+                } else {
+                    $dates .= '-'.$group.',';
+                }
+                $close = 1 - $close;
+            }
+
+            $dates = explode(',', $dates);
+            array_pop($dates);
+
+            $start = date('H:i', strtotime($area['start_time']));
+            $end = date('H:i', strtotime($area['end_time']));
+
+            foreach($dates as $dKay => $dValue) {
+                $dates[$dKay] .= ' '.$start.' ás '.$end;
+            }
+
+            $array['list'][] = [
+                'id' => $area['id'],
+                'cover' => asset('storange/'.$area['cover']),
+                'title' => $area['title'],
+                'dates' => $dates
+            ];
+        }
+
+        return $array;
+    }
+
+    public function setReservation()
+    {
+        $array = ['error' => ''];
+
+
+
+        return $array;
+    }
+
+    public function getDisabledDates()
+    {
+        $array = ['error' => ''];
+
+
+
+        return $array;
+    }
+
+    public function getTimes()
+    {
+        $array = ['error' => ''];
+
+
+
+        return $array;
+    }
+
+    public function getMyReservations()
+    {
+        $array = ['error' => ''];
+
+
+
+        return $array;
+    }
+
+    public function delMyReservation()
     {
         $array = ['error' => ''];
 
