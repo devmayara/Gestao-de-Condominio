@@ -50,6 +50,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/foundandlost', [FoundAndLostController::class, 'insert']);
     Route::put('/foundandlost/{id}', [FoundAndLostController::class, 'update']);
 
+    // Unidade
     Route::get('/unit/{id}', [UnitController::class, 'getInfo']);
     Route::post('/unit/{id}/addperson', [UnitController::class, 'addPerson']);
     Route::post('/unit/{id}/addvehicle', [UnitController::class, 'addVehicle']);
@@ -58,10 +59,13 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/unit/{id}/removevehicle', [UnitController::class, 'removeVehicle']);
     Route::post('/unit/{id}/removepet', [UnitController::class, 'removePet']);
 
+    // Reservas
     Route::get('/reservations', [ReservationController::class, 'getReservations']);
     Route::post('/reservation/{id}', [ReservationController::class, 'setReservation']);
+
     Route::get('/reservation/{id}/disableddates', [ReservationController::class, 'getDisabledDates']);
     Route::get('/reservation/{id}/times', [ReservationController::class, 'getTimes']);
+
     Route::get('/myreservations', [ReservationController::class, 'getMyReservations']);
     Route::delete('/myreservation/{id}', [ReservationController::class, 'delMyReservation']);
 });

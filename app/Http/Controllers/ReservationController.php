@@ -76,7 +76,7 @@ class ReservationController extends Controller
         $validator = Validator::make($request->all(), [
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required|date_format:H:i:s',
-            'property' => 'require'
+            'property' => 'required'
         ]);
 
         if(!$validator->fails()) {
@@ -111,6 +111,15 @@ class ReservationController extends Controller
                     $can = false;
                 }
 
+                // $existingReservations = Reservation::where('id_area', $id)
+                // ->get()
+                // ->toArray();
+                // foreach($existingReservations as $rKey => $rItem) {
+                //     if(strtotime('+1 hour', strtotime($existingReservations[$rKey]['reservation_date']))
+                //     > strtotime($date.' '.$time)
+                //     ) $can = false;
+                // }
+
                 $existingReservations = Reservation::where('id_area', $id)
                 ->where('reservation_date', $date.' '.$time)
                 ->count();
@@ -125,11 +134,11 @@ class ReservationController extends Controller
                     $newReservation->reservation_date = $date.' '.$time;
                     $newReservation->save();
                 } else {
-                    $array['error'] = 'Reserva não permitida neste dia/horário';
+                    $array['error'] = 'Reserva não permitida neste dia/horário!';
                     return $array;
                 }
             } else {
-                $array['error'] = 'Dados incorretos';
+                $array['error'] = 'Dados incorretos!';
                 return $array;
             }
         } else {
@@ -140,10 +149,43 @@ class ReservationController extends Controller
         return $array;
     }
 
-    public function getDisabledDates()
+    public function getDisabledDates($id)
     {
         $array = ['error' => ''];
 
+        $area = Area::find($id);
+        if($area) {
+            $disableDays = AreaDisabledDay::where('id_area', $id)->get();
+            foreach($disableDays as $disableDay) {
+                $array['list'][] = $disableDay['day'];
+            }
+
+            $allowedDays = explode(',', $area['days']);
+            $offDays = [];
+            for($q=0;$q<7;$q++) {
+                if(!in_array($q, $allowedDays)) {
+                    $offDays[] = $q;
+                }
+            }
+
+            $start = time();
+            $end = strtotime('+3 months');
+
+            for(
+                $current = $start;
+                $current < $end;
+                $current = strtotime('+1 day', $current)
+            ) {
+                $wd = date('w', $current);
+                if(in_array($wd, $offDays)) {
+                    $array['list'][] = date('Y-m-d', $current);
+                }
+            }
+            
+        } else {
+            $array['error'] = 'Area inexistente!';
+            return $array;
+        }
 
 
         return $array;
