@@ -27,11 +27,41 @@ class UserController extends Controller
         return $array;
     }
 
-    public function update()
+    public function update($id, Request $request)
     {
         $array = ['error' => ''];
 
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $cpf = $request->input('cpf');
+        $password = $request->input('password');
 
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        if($name && $email && $cpf && $password) {
+            $dados = User::find($id);
+            if($dados) {
+                $dados->name = $name;
+                $dados->email = $email;
+                $dados->cpf = $cpf;
+                $dados->password = $hash;
+                $dados->save();
+
+                $array['user'] = [
+                    'id' => $id,
+                    'name' => $name,
+                    'email' => $email,
+                    'cpf' => $cpf,
+                    'password' => $password,
+                ];
+            } else {
+                $array['error'] = 'Usuário não existe!';
+                return $array;
+            }
+        } else {
+            $array['error'] = 'Usuário não existe!';
+            return $array;
+        }
 
         return $array;
     }
