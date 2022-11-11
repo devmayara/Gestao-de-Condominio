@@ -55,7 +55,7 @@ class UserController extends Controller
                     'password' => $password,
                 ];
             } else {
-                $array['error'] = 'Usuário não existe!';
+                $array['error'] = 'ID não existe!';
                 return $array;
             }
         } else {

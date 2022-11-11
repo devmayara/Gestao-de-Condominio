@@ -77,6 +77,6 @@ Route::middleware('auth:api')->group(function(){
 
     // Usuários
     Route::get('/user/{id}/info', [UserController::class, 'getInfo']);
-    Route::get('/user/{id}/edit', [UserController::class, 'update']);
+    Route::put('/user/{id}/edit', [UserController::class, 'update']);
 
 });
