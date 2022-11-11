@@ -6,6 +6,7 @@ use App\Http\Controllers\DocController;
 use App\Http\Controllers\FoundAndLostController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WallController;
 use App\Http\Controllers\WarningController;
 use Illuminate\Http\Request;
@@ -35,17 +36,22 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/auth/validate', [AuthController::class, 'validateToken']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    // Mural de Avisos
     Route::get('/walls', [WallController::class, 'getAll']);
     Route::post('/wall/{id}/like', [WallController::class, 'like']);
 
+    // Documentos
     Route::get('/doc', [DocController::class, 'getAll']);
 
+    // Livro de Ocorrências
     Route::get('/warnings', [WarningController::class, 'getMyWarnings']);
     Route::post('/warning', [WarningController::class, 'setWarning']);
     Route::post('/warning/file', [WarningController::class, 'addWarningFile']);
 
+    // Boletos
     Route::get('billets', [BilletController::class, 'getAll']);
 
+    // Achados e Perdidos
     Route::get('/foundandlost', [FoundAndLostController::class, 'getAll']);
     Route::post('/foundandlost', [FoundAndLostController::class, 'insert']);
     Route::put('/foundandlost/{id}', [FoundAndLostController::class, 'update']);
@@ -68,4 +74,9 @@ Route::middleware('auth:api')->group(function(){
 
     Route::get('/myreservations', [ReservationController::class, 'getMyReservations']);
     Route::delete('/myreservation/{id}', [ReservationController::class, 'delMyReservation']);
+
+    // Usuários
+    Route::get('/user/{id}/info', [UserController::class, 'getInfo']);
+    Route::get('/user/{id}/edit', [UserController::class, 'update']);
+
 });
