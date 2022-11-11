@@ -7,6 +7,7 @@ use App\Models\AreaDisabledDay;
 use App\Models\Reservation;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 use function PHPSTORM_META\map;
@@ -308,11 +309,27 @@ class ReservationController extends Controller
         return $array;
     }
 
-    public function delMyReservation()
+    public function delMyReservation($id)
     {
         $array = ['error' => ''];
 
+        $user = auth()->user();
+        $reservation = Reservation::find($id);
+        if($reservation) {
+            $unit = Unit::where('id', $reservation['id_unit'])
+            ->where('id_owner', $user['id'])
+            ->count();
 
+            if($unit > 0) {
+                Reservation::find($id)->delete();
+            }  else {
+                $array['error'] = 'Esta reserva não é sua!';
+                return $array;
+            }
+        } else {
+            $array['error'] = 'Reserva inexistente!';
+            return $array;
+        }
 
         return $array;
     }
